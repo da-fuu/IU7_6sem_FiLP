@@ -1,0 +1,104 @@
+\section{Варианты вопросов и ответов на них}
+
+\begin{lstlisting}[caption={Вопрос и ответ №1}, label={lst:q1}]
+?- find_property(ivanov, Object, _).
+Object = toyota ;
+Object = cottage.
+\end{lstlisting}
+
+\begin{lstlisting}[caption={Вопрос и ответ №2}, label={lst:q2}]
+?- find_property(ivanov, Object, Price).
+Object = toyota,
+Price = 2500000 ;
+Object = cottage,
+Price = 1200000.
+\end{lstlisting}
+
+\begin{lstlisting}[caption={Вопрос и ответ №3}, label={lst:q3}]
+?- find_property(petrov, Object, _).
+Object = bmw ;
+Object = apartment ;
+Object = garden.
+\end{lstlisting}
+
+\begin{lstlisting}[caption={Вопрос и ответ №4}, label={lst:q4}]
+?- find_property(sidorov, Object, Price).
+Object = residential,
+Price = 1500000 ;
+Object = boat,
+Price = 3000000.
+\end{lstlisting}
+
+\begin{lstlisting}[caption={Вопрос и ответ №5}, label={lst:q5}]
+?- find_property(messi, Object, Price).
+false.
+\end{lstlisting}
+
+\section{Порядок работы системы}
+\renewcommand{\arraystretch}{1.5}
+\begin{tabularx}{\textwidth}{|c|X|X|}
+	\hline
+	\textbf{№}                                                                                          & \textbf{Сравниваемые термы; результат; подстановка} & \textbf{Дальнейшие действия: прямой ход или откат} \\
+	\hline
+	0                                                                                                   &
+	—                                                                                                   &
+	\textbf{Резольвента:} \newline
+	\texttt{find\_property(ivanov, Object, Price)}                                                                                                                                                                 \\
+	\hline
+
+	1                                                                                                   &
+	\textbf{Сравниваемые термы:} \newline
+	T1 = \texttt{find\_property(ivanov, Object, Price)} \newline
+	T2 = \texttt{find\_property(LastName, Object, Price)} \newline
+	\textbf{Результат:} Унификация успешна. \newline
+	\textbf{Подстановка:} \newline
+	$\{\text{LastName}=\text{ivanov}\}$                                                                 &
+	\textbf{Прямой ход.} Редукция цели. Замена цели телом правила. \newline
+	\textbf{Новая резольвента:} \newline
+	\texttt{1. property(ivanov, Object, Price, \_)}                                                                                                                                                                \\
+	\hline
+
+	2                                                                                                   &
+	\textbf{Сравниваемые термы:} \newline
+	T1 = \texttt{property(ivanov, Object, Price, \_)} \newline
+	T2 = \texttt{property(ivanov, toyota, 2500000, car(black, 'a111aa'))} \newline
+	\textbf{Результат:} Унификация успешна. \newline
+	\textbf{Подстановка:} \newline
+	$\{\text{LastName}=\text{ivanov}, \text{Object}=\text{toyota}, \text{Price}=2500000\}$              &
+	\textbf{Резольвента пуста.} \newline
+	\textbf{Вывод:} \newline
+	\texttt{Object = toyota, Price = 2500000.} \newline
+	\textbf{Откат} и поиск следующего решения.                                                                                                                                                                     \\
+	\hline
+
+	3                                                                                                   &
+	\textbf{Сравниваемые термы:} \newline
+	T1 = \texttt{property(ivanov, Object, Price, \_)} \newline
+	T2 = \texttt{property(ivanov, cottage, 1200000, building(60))} \newline
+	\textbf{Результат:} Унификация успешна. \newline
+	\textbf{Подстановка:} \newline
+	$\{\text{LastName}=\text{ivanov}, \text{Object}=\text{cottage}, \text{Price}=1200000\}$             &
+	\textbf{Резольвента пуста.} \newline
+	\textbf{Вывод:} \newline
+	\texttt{Object = cottage, Price = 1200000.} \newline
+	\textbf{Откат} и поиск следующего решения.                                                                                                                                                                     \\
+	\hline
+
+	4                                                                                                   &
+	\textbf{Сравниваемые термы:} \newline
+	T1 = \texttt{property(ivanov, Object, Price, \_)} \newline
+	T2 = \texttt{property(petrov, bmw, 4000000, 4000000, car(white, 'b222bb'))} \newline
+	\textbf{Результат:} Унификация неуспешна (не унифицируются первые аргументы --- разные константы).  &
+	\textbf{Откат.} Переход к следующему предложению базы знаний. \newline (Последующие проверки аналогично дадут неуспех).                                                                                        \\
+	\hline
+
+	5                                                                                                   &
+	\textbf{Сравниваемые термы:} \newline
+	T1 = \texttt{property(ivanov, Object, Price, \_)} \newline
+	T2 = \texttt{property(sidorov, boat, 3000000, watercraft(5))} \newline
+	\textbf{Результат:} Унификация невозможна (не унифицируются первые аргументы --- разные константы). &
+	\textbf{Конец базы знаний.} Откат к предыдущему состоянию. \newline
+	Резольвента пуста. \newline
+	\textbf{Завершение работы.} (В консоль выводится \texttt{false}).                                                                                                                                              \\
+	\hline
+\end{tabularx}
