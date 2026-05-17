@@ -34,6 +34,8 @@ Price = 3000000.
 false.
 \end{lstlisting}
 
+\clearpage
+
 \section{Порядок работы системы}
 \renewcommand{\arraystretch}{1.5}
 \begin{tabularx}{\textwidth}{|c|X|X|}
@@ -49,6 +51,30 @@ false.
 	1                                                                                                   &
 	\textbf{Сравниваемые термы:} \newline
 	T1 = \texttt{find\_property(ivanov, Object, Price)} \newline
+	T2 = \texttt{phonebook(ivanov, ...)} \newline
+	\textbf{Результат:} Унификация неуспешна (разные функторы).                                         &
+	Переход к следующему предложению базы знаний.                                                                                                                                                                  \\
+	\hline
+
+	2                                                                                                   &
+	\textbf{Сравниваемые термы:} \newline
+	T1 = \texttt{find\_property(ivanov, Object, Price)} \newline
+	T2 = \texttt{depositor(ivanov, ...)} \newline
+	\textbf{Результат:} Унификация неуспешна (разные функторы).                                         &
+	Переход к следующему предложению базы знаний.                                                                                                                                                                  \\
+	\hline
+
+	3                                                                                                   &
+	\textbf{Сравниваемые термы:} \newline
+	T1 = \texttt{find\_property(ivanov, Object, Price)} \newline
+	T2 = \texttt{property(ivanov, ...)} \newline
+	\textbf{Результат:} Унификация неуспешна (разные функторы).                                         &
+	Переход к следующему предложению базы знаний.                                                                                                                                                                  \\
+	\hline
+
+	4                                                                                                   &
+	\textbf{Сравниваемые термы:} \newline
+	T1 = \texttt{find\_property(ivanov, Object, Price)} \newline
 	T2 = \texttt{find\_property(LastName, Object, Price)} \newline
 	\textbf{Результат:} Унификация успешна. \newline
 	\textbf{Подстановка:} \newline
@@ -58,7 +84,23 @@ false.
 	\texttt{1. property(ivanov, Object, Price, \_)}                                                                                                                                                                \\
 	\hline
 
-	2                                                                                                   &
+	5                                                                                                   &
+	\textbf{Сравниваемые термы:} \newline
+	T1 = \texttt{property(ivanov, Object, Price, \_)} \newline
+	T2 = \texttt{phonebook(ivanov, ...)} \newline
+	\textbf{Результат:} Унификация неуспешна (разные функторы).                                         &
+	Переход к следующему предложению базы знаний.                                                                                                                                                                  \\
+	\hline
+
+	6                                                                                                   &
+	\textbf{Сравниваемые термы:} \newline
+	T1 = \texttt{property(ivanov, Object, Price, \_)} \newline
+	T2 = \texttt{depositor(ivanov, ...)} \newline
+	\textbf{Результат:} Унификация неуспешна (разные функторы).                                         &
+	Переход к следующему предложению базы знаний.                                                                                                                                                                  \\
+	\hline
+
+	7                                                                                                   &
 	\textbf{Сравниваемые термы:} \newline
 	T1 = \texttt{property(ivanov, Object, Price, \_)} \newline
 	T2 = \texttt{property(ivanov, toyota, 2500000, car(black, 'a111aa'))} \newline
@@ -71,7 +113,7 @@ false.
 	\textbf{Откат} и поиск следующего решения.                                                                                                                                                                     \\
 	\hline
 
-	3                                                                                                   &
+	8                                                                                                   &
 	\textbf{Сравниваемые термы:} \newline
 	T1 = \texttt{property(ivanov, Object, Price, \_)} \newline
 	T2 = \texttt{property(ivanov, cottage, 1200000, building(60))} \newline
@@ -84,15 +126,15 @@ false.
 	\textbf{Откат} и поиск следующего решения.                                                                                                                                                                     \\
 	\hline
 
-	4                                                                                                   &
+	9                                                                                                   &
 	\textbf{Сравниваемые термы:} \newline
 	T1 = \texttt{property(ivanov, Object, Price, \_)} \newline
 	T2 = \texttt{property(petrov, bmw, 4000000, 4000000, car(white, 'b222bb'))} \newline
 	\textbf{Результат:} Унификация неуспешна (не унифицируются первые аргументы --- разные константы).  &
-	\textbf{Откат.} Переход к следующему предложению базы знаний. \newline (Последующие проверки аналогично дадут неуспех).                                                                                        \\
+	\textbf{Откат.} Переход к следующему предложению базы знаний.                                                                                                                                                  \\
 	\hline
 
-	5                                                                                                   &
+	10                                                                                                  &
 	\textbf{Сравниваемые термы:} \newline
 	T1 = \texttt{property(ivanov, Object, Price, \_)} \newline
 	T2 = \texttt{property(sidorov, boat, 3000000, watercraft(5))} \newline
