@@ -1,0 +1,71 @@
+\section{Реализация программы}
+
+Реализация программы представлена в листинге \ref{lst:prog}.
+
+\begin{lstlisting}[caption={Реализация программы}, label={lst:prog}]
+factorial_tail(0, Acc, Acc) :- !.
+factorial_tail(N, Acc, Result) :-
+    N > 0,
+    NewAcc is Acc * N,
+    NewN is N - 1,
+    factorial_tail(NewN, NewAcc, Result).
+
+factorial(N, Result) :- factorial_tail(N, 1, Result).
+
+fib_tail(0, Acc1, _, Acc1) :- !.
+fib_tail(N, Acc1, Acc2, Result) :-
+    N > 0,
+    NewAcc2 is Acc1 + Acc2,
+    NewN is N - 1,
+    fib_tail(NewN, Acc2, NewAcc2, Result).
+
+fibonacci(N, Result) :- fib_tail(N, 0, 1, Result).
+\end{lstlisting}
+
+Форма вопроса вида \ref{lst:query1} поиска n!.
+\begin{lstlisting}[caption={Форма задания вопроса 1}, label={lst:query1}]
+?- factorial(n, Res).
+\end{lstlisting}
+
+Форма вопроса вида \ref{lst:query2} поиска n-го числа Фибоначчи.
+\begin{lstlisting}[caption={Форма задания вопроса 2}, label={lst:query2}]
+?- fibonacci(n, Res).
+\end{lstlisting}
+
+\clearpage
+\section{Варианты вопросов и ответов на них}
+
+\begin{lstlisting}[caption={Вопрос и ответ №1}, label={lst:q1}]
+?- factorial(0, Res).
+Res = 1.
+\end{lstlisting}
+
+\begin{lstlisting}[caption={Вопрос и ответ №2}, label={lst:q2}]
+?- factorial(1, Res).
+Res = 1.
+\end{lstlisting}
+
+\begin{lstlisting}[caption={Вопрос и ответ №3}, label={lst:q3}]
+?- factorial(4, Res).
+Res = 24.
+\end{lstlisting}
+
+\begin{lstlisting}[caption={Вопрос и ответ №4}, label={lst:q4}]
+?- fibonacci(0, Res).
+Res = 0.
+\end{lstlisting}
+
+\begin{lstlisting}[caption={Вопрос и ответ №5}, label={lst:q5}]
+?- fibonacci(1, Res).
+Res = 1.
+\end{lstlisting}
+
+\begin{lstlisting}[caption={Вопрос и ответ №6}, label={lst:q6}]
+?- fibonacci(2, Res).
+Res = 1.
+\end{lstlisting}
+
+\begin{lstlisting}[caption={Вопрос и ответ №7}, label={lst:q7}]
+?- fibonacci(6, Res).
+Res = 8.
+\end{lstlisting}

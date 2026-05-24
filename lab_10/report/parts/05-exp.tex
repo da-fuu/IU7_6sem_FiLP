@@ -1,0 +1,464 @@
+\clearpage
+
+\section{Порядок работы системы}
+
+Вопрос: \texttt{?- factorial(2, Res).}
+
+\begin{tabularx}{\textwidth}{|c|>{\small}X|>{\small}X|>{\small}X|}
+	\hline
+	\textbf{№}                                                                         &
+	\textbf{Состояние резольвенты}                                                     &
+	\textbf{Для каких термов запускается алгоритм унификации, результат и подстановка} &
+	\textbf{Дальнейшие действия}                                                               \\
+	\hline
+
+	0                                                                                  &
+	factorial(2, Res).                                                                 &
+	—                                                                                  &
+	Резольвента непустая. \newline
+	Прямой ход. \newline
+	Запуск алгоритма унификации для верхней подцели с 1-ым заголовком из БЗ (factorial\_tail). \\
+	\hline
+
+	1                                                                                  &
+	factorial(2, Res).                                                                 &
+	factorial(2, Res) = \newline
+	factorial\_tail(0, Acc, Acc) \newline
+	Унификация неуспешна (разные функторы).                                            &
+	Унификация неуспешна. \newline
+	Резольвента непустая. \newline
+	Прямой ход.                                                                                \\
+	\hline
+
+	2                                                                                  &
+	...                                                                                &
+	... (Пропуск второго правила factorial\_tail)                                      &
+	...                                                                                        \\
+	\hline
+
+	3                                                                                  &
+	factorial\_tail(2, 1, Res). \newline
+	Успешная унификация. \newline
+	Редукция и применение подстановки к полученной конъюнкции целей: \newline
+	factorial\_tail(2, 1, Res).                                                        &
+	factorial(2, Res) = \newline
+	factorial(N, Result) \newline
+	Унификация успешна. \newline
+	Подстановка: \newline
+	\{N = 2, Result = Res\}                                                            &
+	Унификация успешна. \newline
+	Резольвента непустая. \newline
+	Прямой ход. \newline
+	Запуск алгоритма унификации для factorial\_tail(2, 1, Res) и 1-ого заголовка.              \\
+	\hline
+
+	4                                                                                  &
+	factorial\_tail(2, 1, Res).                                                        &
+	factorial\_tail(2, 1, Res) = \newline
+	factorial\_tail(0, Acc, Acc) \newline
+	Унификация неуспешна (разные константы: 2 и 0).                                    &
+	Унификация неуспешна. \newline
+	Резольвента непустая. \newline
+	Прямой ход. Переход к следующему правилу.                                                  \\
+	\hline
+
+	5                                                                                  &
+	>(2, 0), \newline
+	NewAcc is 1 * 2, \newline
+	NewN is 2 - 1, \newline
+	factorial\_tail(NewN, NewAcc, Res). \newline
+	Успешная унификация. \newline
+	Редукция и применение подстановки.                                                 &
+	factorial\_tail(2, 1, Res) = \newline
+	factorial\_tail(N, Acc, Result) \newline
+	Унификация успешна. \newline
+	Подстановка: \newline
+	\{N = 2, Acc = 1, Result = Res\}                                                   &
+	Унификация успешна. \newline
+	Резольвента непустая. \newline
+	Прямой ход. \newline
+	Запуск алгоритма унификации для >(2, 0) и Истина.                                          \\
+	\hline
+
+	6                                                                                  &
+	NewAcc is 1 * 2, \newline
+	NewN is 2 - 1, \newline
+	factorial\_tail(NewN, NewAcc, Res). \newline
+	Успешная унификация. \newline
+	Вычисление предиката сравнения.                                                    &
+	>(2, 0) = \newline
+	Истина \newline
+	Унификация успешна. \newline
+	Подстановка: \newline
+	Нет.                                                                               &
+	Унификация успешна. \newline
+	Резольвента непустая. \newline
+	Прямой ход. \newline
+	Запуск алгоритма вычисления для is(1 * 2).                                                 \\
+	\hline
+
+	7                                                                                  &
+	NewN is 2 - 1, \newline
+	factorial\_tail(NewN, 2, Res). \newline
+	Успешная унификация. \newline
+	Вычисление предиката is.                                                           &
+	NewAcc is 1 * 2 = \newline
+	Истина \newline
+	Унификация успешна. \newline
+	Подстановка: \newline
+	\{NewAcc = 2\}                                                                     &
+	Унификация успешна. \newline
+	Резольвента непустая. \newline
+	Прямой ход. \newline
+	Запуск алгоритма вычисления для is(2 - 1).                                                 \\
+	\hline
+
+	8                                                                                  &
+	factorial\_tail(1, 2, Res). \newline
+	Успешная унификация. \newline
+	Вычисление предиката is.                                                           &
+	NewN is 2 - 1 = \newline
+	Истина \newline
+	Унификация успешна. \newline
+	Подстановка: \newline
+	\{NewN = 1\}                                                                       &
+	Унификация успешна. \newline
+	Резольвента непустая. \newline
+	Прямой ход. \newline
+	Запуск алгоритма унификации для factorial\_tail(1, 2, Res) и 1-ого заголовка БЗ.           \\
+	\hline
+
+	9                                                                                  &
+	factorial\_tail(1, 2, Res).                                                        &
+	factorial\_tail(1, 2, Res) = \newline
+	factorial\_tail(0, Acc, Acc) \newline
+	Унификация неуспешна (разные константы: 1 и 0).                                    &
+	Унификация неуспешна. \newline
+	Резольвента непустая. \newline
+	Прямой ход. Переход к следующему правилу.                                                  \\
+	\hline
+
+	10                                                                                 &
+	>(1, 0), \newline
+	NewAcc is 2 * 1, \newline
+	NewN is 1 - 1, \newline
+	factorial\_tail(NewN, NewAcc, Res). \newline
+	Успешная унификация. \newline
+	Редукция и применение подстановки.                                                 &
+	factorial\_tail(1, 2, Res) = \newline
+	factorial\_tail(N, Acc, Result) \newline
+	Унификация успешна. \newline
+	Подстановка: \newline
+	\{N = 1, Acc = 2, Result = Res\}                                                   &
+	Унификация успешна. \newline
+	Резольвента непустая. \newline
+	Прямой ход. \newline
+	Запуск алгоритма унификации для >(1, 0) и Истина.                                          \\
+	\hline
+
+	11                                                                                 &
+	NewAcc is 2 * 1, \newline
+	NewN is 1 - 1, \newline
+	factorial\_tail(NewN, NewAcc, Res). \newline
+	Успешная унификация.                                                               &
+	>(1, 0) = \newline
+	Истина \newline
+	Унификация успешна. \newline
+	Подстановка: \newline
+	Нет.                                                                               &
+	Унификация успешна. \newline
+	Резольвента непустая. \newline
+	Прямой ход.                                                                                \\
+	\hline
+
+	12                                                                                 &
+	NewN is 1 - 1, \newline
+	factorial\_tail(NewN, 2, Res). \newline
+	Успешная унификация.                                                               &
+	NewAcc is 2 * 1 = \newline
+	Истина \newline
+	Унификация успешна. \newline
+	Подстановка: \newline
+	\{NewAcc = 2\}                                                                     &
+	Унификация успешна. \newline
+	Резольвента непустая. \newline
+	Прямой ход.                                                                                \\
+	\hline
+
+	13                                                                                 &
+	factorial\_tail(0, 2, Res). \newline
+	Успешная унификация.                                                               &
+	NewN is 1 - 1 = \newline
+	Истина \newline
+	Унификация успешна. \newline
+	Подстановка: \newline
+	\{NewN = 0\}                                                                       &
+	Унификация успешна. \newline
+	Резольвента непустая. \newline
+	Прямой ход. \newline
+	Запуск алгоритма унификации для factorial\_tail(0, 2, Res) и 1-ого заголовка БЗ.           \\
+	\hline
+
+	14                                                                                 &
+	!. \newline
+	Успешная унификация. \newline
+	Редукция базового случая (дно рекурсии). \newline
+	Применение подстановки.                                                            &
+	factorial\_tail(0, 2, Res) = \newline
+	factorial\_tail(0, Acc, Acc) \newline
+	Унификация успешна. \newline
+	Подстановка: \newline
+	\{Acc = 2, Res = 2\}                                                               &
+	Унификация успешна. \newline
+	Резольвента непустая. \newline
+	Прямой ход. \newline
+	Запуск алгоритма обработки предиката отсечения (!).                                        \\
+	\hline
+
+	15                                                                                 &
+	Резольвента пуста. \newline
+	Успешная унификация. \newline
+	Отработка отсечения.                                                               &
+	! = \newline
+	! \newline
+	Унификация успешна. \newline
+	Подстановка: \newline
+	Нет.                                                                               &
+	Унификация успешна. \newline
+	Предикат отсечения срабатывает: удаляются точки возврата. \newline
+	Резольвента пуста. \newline
+	Знания подобраны. Подстановка \{Res = 2\}. \newline
+	Завершение работы.                                                                         \\
+	\hline
+\end{tabularx}
+
+\clearpage
+Вопрос: \texttt{?- fibonacci(2, Res).}
+
+\begin{tabularx}{\textwidth}{|c|>{\small}X|>{\small}X|>{\small}X|}
+	\hline
+	\textbf{№}                                                                         &
+	\textbf{Состояние резольвенты}                                                     &
+	\textbf{Для каких термов запускается алгоритм унификации, результат и подстановка} &
+	\textbf{Дальнейшие действия}                                                         \\
+	\hline
+
+	0                                                                                  &
+	fibonacci(2, Res).                                                                 &
+	—                                                                                  &
+	Резольвента непустая. \newline
+	Прямой ход. \newline
+	Запуск алгоритма унификации для верхней подцели с 1-ым заголовком из БЗ.             \\
+	\hline
+
+	1                                                                                  &
+	fibonacci(2, Res).                                                                 &
+	fibonacci(2, Res) = \newline
+	factorial\_tail(0, Acc, Acc) \newline
+	Унификация неуспешна (разные функторы).                                            &
+	Унификация неуспешна. \newline
+	Резольвента непустая. \newline
+	Прямой ход. Переход к следующему правилу.                                            \\
+	\hline
+
+	2                                                                                  &
+	...                                                                                &
+	... (Пропуск остальных предикатов factorial\_tail, factorial, fib\_tail)           &
+	...                                                                                  \\
+	\hline
+
+	3                                                                                  &
+	fib\_tail(2, 0, 1, Res). \newline
+	Успешная унификация. \newline
+	Редукция и применение подстановки к полученной конъюнкции целей: \newline
+	fib\_tail(2, 0, 1, Res).                                                           &
+	fibonacci(2, Res) = \newline
+	fibonacci(N, Result) \newline
+	Унификация успешна. \newline
+	Подстановка: \newline
+	\{N = 2, Result = Res\}                                                            &
+	Унификация успешна. \newline
+	Резольвента непустая. \newline
+	Прямой ход. \newline
+	Запуск алгоритма унификации для fib\_tail(2, 0, 1, Res) и 1-ого заголовка БЗ.        \\
+	\hline
+
+	4                                                                                  &
+	fib\_tail(2, 0, 1, Res).                                                           &
+	fib\_tail(2, 0, 1, Res) = \newline
+	fib\_tail(0, Acc1, \_, Acc1) \newline
+	Унификация неуспешна (разные константы: 2 и 0).                                    &
+	Унификация неуспешна. \newline
+	Резольвента непустая. \newline
+	Прямой ход. Переход к следующему правилу.                                            \\
+	\hline
+
+	5                                                                                  &
+	>(2, 0), \newline
+	NewAcc2 is 0 + 1, \newline
+	NewN is 2 - 1, \newline
+	fib\_tail(NewN, 1, NewAcc2, Res). \newline
+	Успешная унификация. \newline
+	Редукция и применение подстановки.                                                 &
+	fib\_tail(2, 0, 1, Res) = \newline
+	fib\_tail(N, Acc1, Acc2, Result) \newline
+	Унификация успешна. \newline
+	Подстановка: \newline
+	\{N = 2, Acc1 = 0, Acc2 = 1, Result = Res\}                                        &
+	Унификация успешна. \newline
+	Резольвента непустая. \newline
+	Прямой ход. \newline
+	Запуск алгоритма унификации для >(2, 0) и Истина.                                    \\
+	\hline
+
+	6                                                                                  &
+	NewAcc2 is 0 + 1, \newline
+	NewN is 2 - 1, \newline
+	fib\_tail(NewN, 1, NewAcc2, Res). \newline
+	Успешная унификация. \newline
+	Вычисление предиката сравнения.                                                    &
+	>(2, 0) = \newline
+	Истина \newline
+	Унификация успешна. \newline
+	Подстановка: \newline
+	Нет.                                                                               &
+	Унификация успешна. \newline
+	Резольвента непустая. \newline
+	Прямой ход. \newline
+	Запуск алгоритма вычисления для is(0 + 1).                                           \\
+	\hline
+
+	7                                                                                  &
+	NewN is 2 - 1, \newline
+	fib\_tail(NewN, 1, 1, Res). \newline
+	Успешная унификация. \newline
+	Вычисление предиката is.                                                           &
+	NewAcc2 is 0 + 1 = \newline
+	Истина \newline
+	Унификация успешна. \newline
+	Подстановка: \newline
+	\{NewAcc2 = 1\}                                                                    &
+	Унификация успешна. \newline
+	Резольвента непустая. \newline
+	Прямой ход. \newline
+	Запуск алгоритма вычисления для is(2 - 1).                                           \\
+	\hline
+
+	8                                                                                  &
+	fib\_tail(1, 1, 1, Res). \newline
+	Успешная унификация. \newline
+	Вычисление предиката is.                                                           &
+	NewN is 2 - 1 = \newline
+	Истина \newline
+	Унификация успешна. \newline
+	Подстановка: \newline
+	\{NewN = 1\}                                                                       &
+	Унификация успешна. \newline
+	Резольвента непустая. \newline
+	Прямой ход. \newline
+	Запуск алгоритма унификации для fib\_tail(1, 1, 1, Res) и 1-ого заголовка БЗ.        \\
+	\hline
+
+	9                                                                                  &
+	fib\_tail(1, 1, 1, Res).                                                           &
+	fib\_tail(1, 1, 1, Res) = \newline
+	fib\_tail(0, Acc1, \_, Acc1) \newline
+	Унификация неуспешна (разные константы: 1 и 0).                                    &
+	Унификация неуспешна. \newline
+	Резольвента непустая. \newline
+	Прямой ход. Переход к следующему правилу.                                            \\
+	\hline
+
+	10                                                                                 &
+	>(1, 0), \newline
+	NewAcc2 is 1 + 1, \newline
+	NewN is 1 - 1, \newline
+	fib\_tail(NewN, 1, NewAcc2, Res). \newline
+	Успешная унификация. \newline
+	Редукция и применение подстановки.                                                 &
+	fib\_tail(1, 1, 1, Res) = \newline
+	fib\_tail(N, Acc1, Acc2, Result) \newline
+	Унификация успешна. \newline
+	Подстановка: \newline
+	\{N = 1, Acc1 = 1, Acc2 = 1, Result = Res\}                                        &
+	Унификация успешна. \newline
+	Резольвента непустая. \newline
+	Прямой ход. \newline
+	Запуск алгоритма унификации для >(1, 0) и Истина.                                    \\
+	\hline
+
+	11                                                                                 &
+	NewAcc2 is 1 + 1, \newline
+	NewN is 1 - 1, \newline
+	fib\_tail(NewN, 1, NewAcc2, Res). \newline
+	Успешная унификация.                                                               &
+	>(1, 0) = \newline
+	Истина \newline
+	Унификация успешна. \newline
+	Подстановка: \newline
+	Нет.                                                                               &
+	Унификация успешна. \newline
+	Резольвента непустая. \newline
+	Прямой ход.                                                                          \\
+	\hline
+
+	12                                                                                 &
+	NewN is 1 - 1, \newline
+	fib\_tail(NewN, 1, 2, Res). \newline
+	Успешная унификация.                                                               &
+	NewAcc2 is 1 + 1 = \newline
+	Истина \newline
+	Унификация успешна. \newline
+	Подстановка: \newline
+	\{NewAcc2 = 2\}                                                                    &
+	Унификация успешна. \newline
+	Резольвента непустая. \newline
+	Прямой ход.                                                                          \\
+	\hline
+
+	13                                                                                 &
+	fib\_tail(0, 1, 2, Res). \newline
+	Успешная унификация.                                                               &
+	NewN is 1 - 1 = \newline
+	Истина \newline
+	Унификация успешна. \newline
+	Подстановка: \newline
+	\{NewN = 0\}                                                                       &
+	Унификация успешна. \newline
+	Резольвента непустая. \newline
+	Прямой ход. \newline
+	Запуск алгоритма унификации для fib\_tail(0, 1, 2, Res) и 1-ого заголовка БЗ.        \\
+	\hline
+
+	14                                                                                 &
+	!. \newline
+	Успешная унификация. \newline
+	Редукция базового случая (дно рекурсии). \newline
+	Применение подстановки.                                                            &
+	fib\_tail(0, 1, 2, Res) = \newline
+	fib\_tail(0, Acc1, \_, Acc1) \newline
+	Унификация успешна. \newline
+	Подстановка: \newline
+	\{Acc1 = 1, \_ = 2, Res = 1\}                                                      &
+	Унификация успешна. \newline
+	Резольвента непустая. \newline
+	Прямой ход. \newline
+	Запуск алгоритма обработки предиката отсечения (!).                                  \\
+	\hline
+
+	15                                                                                 &
+	Резольвента пуста. \newline
+	Успешная унификация. \newline
+	Отработка отсечения.                                                               &
+	! = \newline
+	! \newline
+	Унификация успешна. \newline
+	Подстановка: \newline
+	Нет.                                                                               &
+	Унификация успешна. \newline
+	Предикат отсечения срабатывает: удаляются точки возврата. \newline
+	Резольвента пуста. \newline
+	Знания подобраны. Подстановка \{Res = 1\}. \newline
+	Завершение работы.                                                                   \\
+	\hline
+\end{tabularx}
