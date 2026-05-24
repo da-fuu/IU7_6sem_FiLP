@@ -1,0 +1,522 @@
+\clearpage
+
+\section{Порядок работы системы}
+
+Запрос: \texttt{?- find\_grandparent(GP, female, female, ivan).} (Поиск бабушки по материнской линии).
+
+\begin{tabularx}{\textwidth}{|c|>{\small}X|>{\small}X|>{\small}X|}
+	\hline
+	\textbf{№}                                                                         &
+	\textbf{Состояние резольвенты}                                                     &
+	\textbf{Для каких термов запускается алгоритм унификации, результат и подстановка} &
+	\textbf{Дальнейшие действия}                                                                 \\
+	\hline
+
+	0                                                                                  &
+	find\_grandparent(GP, female, female, ivan).                                       &
+	—                                                                                  &
+	Резольвента непустая. \newline
+	Прямой ход. \newline
+	Запуск алгоритма унификации для верхней подцели с 1-ым заголовком из БЗ (find\_grandparent). \\
+	\hline
+
+	1                                                                                  &
+	parent(GP, Parent), \newline
+	gender(GP, GPGender), \newline
+	parent(Parent, Child), \newline
+	gender(Parent, PGender). \newline
+	Применение подстановки: \newline
+	parent(GP, Parent), \newline
+	gender(GP, female), \newline
+	parent(Parent, ivan), \newline
+	gender(Parent, female).                                                            &
+	find\_grandparent(GP, female, female, ivan) =
+	find\_grandparent(GP, GPGender, PGender, Child) \newline
+	Унификация успешна. \newline
+	Подстановка: \newline
+	\{GPGender = female, \newline PGender = female, \newline Child = ivan\}            &
+	Унификация успешна. \newline
+	Резольвента непустая. \newline
+	Прямой ход.                                                                                  \\
+	\hline
+
+	2                                                                                  &
+	parent(GP, Parent), \newline
+	gender(GP, female), \newline
+	parent(Parent, ivan), \newline
+	gender(Parent, female).                                                            &
+	parent(GP, Parent) = \newline
+	find\_grandparent(...) \newline
+	Унификация неуспешна (разные функторы).                                            &
+	Унификация неуспешна. \newline
+	Резольвента непустая. \newline
+	Прямой ход.                                                                                  \\
+	\hline
+
+	3                                                                                  &
+	parent(GP, Parent), \newline
+	gender(GP, female), \newline
+	...                                                                                &
+	parent(GP, Parent) = \newline
+	gender(petr, male) \newline
+	Унификация неуспешна (разные функторы).                                            &
+	Унификация неуспешна. \newline
+	Резольвента непустая. \newline
+	Прямой ход.                                                                                  \\
+	\hline
+
+	4-9                                                                                &
+	...                                                                                &
+	...                                                                                &
+	... (Пропуск оставшихся 6 фактов gender)                                                     \\
+	\hline
+
+	10                                                                                 &
+	parent(GP, Parent), \newline
+	gender(GP, female), \newline
+	parent(Parent, ivan), \newline
+	gender(Parent, female). \newline
+	Редукция и применение подстановки к полученной конъюнкции целей: \newline
+	gender(petr, female), \newline
+	parent(maria, ivan), \newline
+	gender(maria, female).                                                             &
+	parent(GP, Parent) = \newline
+	parent(petr, maria) \newline
+	Унификация успешна. \newline
+	Подстановка: \newline
+	\{GP = petr, Parent = maria\}                                                      &
+	Унификация успешна. \newline
+	Выполнение редукции подцели и применение подстановки.
+	Резольвента непустая. \newline
+	Прямой ход.                                                                                  \\
+	\hline
+
+	11                                                                                 &
+	gender(petr, female), \newline
+	parent(maria, ivan), \newline
+	gender(maria, female).                                                             &
+	gender(petr, female) = \newline
+	find\_grandparent(...) \newline
+	Унификация неуспешна (разные функторы).                                            &
+	Унификация неуспешна. \newline
+	Резольвента непустая. \newline
+	Прямой ход.                                                                                  \\
+	\hline
+
+	12                                                                                 &
+	gender(petr, female), \newline
+	parent(maria, ivan), \newline
+	gender(maria, female).                                                             &
+	gender(petr, female) = \newline
+	gender(petr, male) \newline
+	Унификация неуспешна (разные константы).                                           &
+	Унификация неуспешна. \newline
+	Резольвента непустая. \newline
+	Прямой ход.                                                                                  \\
+	\hline
+
+	13-20                                                                              &
+	...                                                                                &
+	...                                                                                &
+	... (Пропуск остальных фактов БЗ. Везде неуспех)                                             \\
+	\hline
+
+	21                                                                                 &
+	gender(petr, female), \newline
+	parent(maria, ivan), \newline
+	gender(maria, female). \newline
+	Восстановленное состояние резольвенты: \newline
+	parent(GP, Parent), \newline
+	gender(GP, female), \newline
+	parent(Parent, ivan), \newline
+	gender(Parent, female).                                                            &
+	Встречен конец БЗ.                                                                 &
+	Откат. Восстанавливается предыдущее состояние резольвенты (Шаг 10). \newline
+	Резольвента непустая. \newline
+	Прямой ход. \newline
+	Запуск алгоритма унификации для parent(GP, Parent) и 10-ого заголовка parent(anna, maria).   \\
+	\hline
+
+	22                                                                                 &
+	parent(GP, Parent), \newline
+	gender(GP, female), \newline
+	parent(Parent, ivan), \newline
+	gender(Parent, female). \newline
+	Успешная унификация. \newline
+	Редукция и применение подстановки к полученной конъюнкции целей: \newline
+	gender(anna, female), \newline
+	parent(maria, ivan), \newline
+	gender(maria, female).                                                             &
+	parent(GP, Parent) = \newline
+	parent(anna, maria) \newline
+	Унификация успешна. \newline
+	Подстановка: \newline
+	\{GP = anna, Parent = maria\}                                                      &
+	Унификация успешна. \newline
+	Резольвента непустая. \newline
+	Прямой ход.                                                                                  \\
+	\hline
+
+	23-26                                                                              &
+	...                                                                                &
+	...                                                                                &
+	... (Пропуск правила find\_grandparent и первых фактов gender)                               \\
+	\hline
+
+	27                                                                                 &
+	gender(anna, female), \newline
+	parent(maria, ivan), \newline
+	gender(maria, female). \newline
+	Успешная унификация. \newline
+	Редукция и применение подстановки к полученной конъюнкции целей: \newline
+	parent(maria, ivan), \newline
+	gender(maria, female).                                                             &
+	gender(anna, female) = \newline
+	gender(anna, female) \newline
+	Унификация успешна. \newline
+	Подстановка: \newline
+	Нет.                                                                               &
+	Унификация успешна. \newline
+	Резольвента непустая. \newline
+	Прямой ход.                                                                                  \\
+	\hline
+
+	28-39                                                                              &
+	...                                                                                &
+	...                                                                                &
+	... (Пропуск несовпадающих заголовков с 1 по 12)                                             \\
+	\hline
+
+	40                                                                                 &
+	parent(maria, ivan), \newline
+	gender(maria, female). \newline
+	Успешная унификация. \newline
+	Редукция и применение подстановки к полученной конъюнкции целей: \newline
+	gender(maria, female).                                                             &
+	parent(maria, ivan) = \newline
+	parent(maria, ivan) \newline
+	Унификация успешна. \newline
+	Подстановка: \newline
+	Нет.                                                                               &
+	Унификация успешна. \newline
+	Резольвента непустая. \newline
+	Прямой ход.                                                                                  \\
+	\hline
+
+	41-47                                                                              &
+	...                                                                                &
+	...                                                                                &
+	... (Пропуск несовпадающих заголовков с 1 по 7)                                              \\
+	\hline
+
+	48                                                                                 &
+	gender(maria, female). \newline
+	Успешная унификация. \newline
+	Редукция и применение подстановки к полученной конъюнкции целей: \newline
+	Нет.                                                                               &
+	gender(maria, female) = \newline
+	gender(maria, female) \newline
+	Унификация успешна. \newline
+	Подстановка: \newline
+	Нет.                                                                               &
+	Унификация успешна. \newline
+	Резольвента пуста. \newline
+	Знания подобраны. Подстановка \{GP = anna\}. \newline
+	Откат (при запросе следующего решения).                                                      \\
+	\hline
+\end{tabularx}
+
+% \clearpage
+Запрос: \texttt{?- max3\_no\_cut(0, 5, 2, Res).}
+
+\begin{tabularx}{\textwidth}{|c|>{\small}X|>{\small}X|>{\small}X|}
+	\hline
+	\textbf{№}                                                                         &
+	\textbf{Состояние резольвенты}                                                     &
+	\textbf{Для каких термов запускается алгоритм унификации, результат и подстановка} &
+	\textbf{Дальнейшие действия}                                                                 \\
+	\hline
+
+	0                                                                                  &
+	max3\_no\_cut(0, 5, 2, Res).                                                       &
+	—                                                                                  &
+	Резольвента непустая. \newline
+	Прямой ход. \newline
+	Запуск алгоритма унификации для верхней подцели с 1-ым заголовком из БЗ (find\_grandparent). \\
+	\hline
+
+	1                                                                                  &
+	max3\_no\_cut(0, 5, 2, Res).                                                       &
+	max3\_no\_cut(0, 5, 2, Res) = \newline
+	find\_grandparent(...) \newline
+	Унификация неуспешна (разные функторы).                                            &
+	Унификация неуспешна. \newline
+	Резольвента непустая. \newline
+	Прямой ход.                                                                                  \\
+	\hline
+
+	2-23                                                                               &
+	...                                                                                &
+	... (Пропуск несовпадающих правил gender, parent, max2\_no\_cut, max2\_cut)        &
+	...                                                                                          \\
+	\hline
+
+	24                                                                                 &
+	max3\_no\_cut(0, 5, 2, Res). \newline
+	Успешная унификация. \newline
+	Редукция и применение подстановки к полученной конъюнкции целей: \newline
+	>=(0, 5), \newline
+	>=(0, 2).                                                                          &
+	max3\_no\_cut(0, 5, 2, Res) = max3\_no\_cut(X, Y, Z, X) \newline
+	Унификация успешна. \newline
+	Подстановка: \newline
+	\{X = 0, Y = 5, Z = 2, Res = X\}                                                   &
+	Унификация успешна. \newline
+	Резольвента непустая. \newline
+	Прямой ход. \newline
+	Запуск алгоритма унификации для >=(0, 5) и Истина.                                           \\
+	\hline
+
+	25                                                                                 &
+	>=(0, 5), \newline
+	>=(0, 2). \newline
+	Восстановленное состояние резольвенты: \newline
+	max3\_no\_cut(0, 5, 2, Res).                                                       &
+	>=(0, 5) = \newline
+	Ложь \newline
+	Унификация неуспешна (Ложь).                                                       &
+	Унификация неуспешна. \newline
+	Откат. Восстанавливается предыдущее состояние резольвенты (Шаг 0). \newline
+	Резольвента непустая. \newline
+	Прямой ход.                                                                                  \\
+	\hline
+
+	26                                                                                 &
+	max3\_no\_cut(0, 5, 2, Res). \newline
+	Успешная унификация. \newline
+	Редукция и применение подстановки к полученной конъюнкции целей: \newline
+	>(5, 0), \newline
+	>=(5, 2).                                                                          &
+	max3\_no\_cut(0, 5, 2, Res) = max3\_no\_cut(X, Y, Z, Y) \newline
+	Унификация успешна. \newline
+	Подстановка: \newline
+	\{X = 0, Y = 5, Z = 2, Res = Y\}                                                   &
+	Унификация успешна. \newline
+	Резольвента непустая. \newline
+	Прямой ход. \newline
+	Запуск алгоритма унификации для >(5, 0) и Истина.                                            \\
+	\hline
+
+	27                                                                                 &
+	>(5, 0), \newline
+	>=(5, 2). \newline
+	Успешная унификация. \newline
+	Редукция и применение подстановки к полученной конъюнкции целей: \newline
+	>=(5, 2).                                                                          &
+	>(5, 0) = \newline
+	Истина \newline
+	Унификация успешна. \newline
+	Подстановка: \newline
+	Нет.                                                                               &
+	Унификация успешна. \newline
+	Резольвента непустая. \newline
+	Прямой ход. \newline
+	Запуск алгоритма унификации для >=(5, 2) и Истина.                                           \\
+	\hline
+
+	28                                                                                 &
+	>=(5, 2). \newline
+	Успешная унификация. \newline
+	Редукция и применение подстановки к полученной конъюнкции целей: \newline
+	Нет.                                                                               &
+	>=(5, 2) = \newline
+	Истина \newline
+	Унификация успешна. \newline
+	Подстановка: \newline
+	Нет.                                                                               &
+	Унификация успешна. \newline
+	Резольвента пуста. \newline
+	Знания подобраны. Подстановка \{Res = 5\}. \newline
+	Откат (при запросе следующего решения).                                                      \\
+	\hline
+
+	29                                                                                 &
+	max3\_no\_cut(0, 5, 2, Res). \newline
+	Успешная унификация. \newline
+	Редукция и применение подстановки к полученной конъюнкции целей: \newline
+	>(2, 0), \newline
+	>(2, 5).                                                                           &
+	max3\_no\_cut(0, 5, 2, Res) = max3\_no\_cut(X, Y, Z, Z) \newline
+	Унификация успешна. \newline
+	Подстановка: \newline
+	\{X = 0, Y = 5, Z = 2, Res = Z\}                                                   &
+	Унификация успешна. \newline
+	Резольвента непустая. \newline
+	Прямой ход. \newline
+	Запуск алгоритма унификации для >(2, 0) и Истина.                                            \\
+	\hline
+
+	30                                                                                 &
+	>(2, 0), \newline
+	>(2, 5). \newline
+	Успешная унификация. \newline
+	Редукция и применение подстановки к полученной конъюнкции целей: \newline
+	>(2, 5).                                                                           &
+	>(2, 0) = \newline
+	Истина \newline
+	Унификация успешна. \newline
+	Подстановка: \newline
+	Нет.                                                                               &
+	Унификация успешна. \newline
+	Резольвента непустая. \newline
+	Прямой ход. \newline
+	Запуск алгоритма унификации для >(2, 5) и Истина.                                            \\
+	\hline
+
+	31                                                                                 &
+	>(2, 5). \newline
+	Восстановленное состояние резольвенты: \newline
+	max3\_no\_cut(0, 5, 2, Res).                                                       &
+	>(2, 5) = \newline
+	Ложь \newline
+	Унификация неуспешна (Ложь).                                                       &
+	Унификация неуспешна. \newline
+	Откат. Восстанавливается предыдущее состояние резольвенты (Шаг 0). \newline
+	Резольвента непустая. \newline
+	Прямой ход.                                                                                  \\
+	\hline
+
+	32-34                                                                              &
+	...                                                                                &
+	... (Пропуск оставшихся правил max3\_cut)                                          &
+	...                                                                                          \\
+	\hline
+
+	35                                                                                 &
+	max3\_no\_cut(0, 5, 2, Res).                                                       &
+	Встречен конец БЗ.                                                                 &
+	Откат. К предыдущему состоянию. \newline
+	Резольвента пуста. \newline
+	Завершение работы.                                                                           \\
+	\hline
+\end{tabularx}
+
+\clearpage
+Запрос: \texttt{?- max3\_cut(0, 5, 2, Res).}
+
+\begin{tabularx}{\textwidth}{|c|>{\small}X|>{\small}X|>{\small}X|}
+	\hline
+	\textbf{№}                                                                                     &
+	\textbf{Состояние резольвенты}                                                                 &
+	\textbf{Для каких термов запускается алгоритм унификации, результат и подстановка}             &
+	\textbf{Дальнейшие действия}                                                                     \\
+	\hline
+
+	0                                                                                              &
+	max3\_cut(0, 5, 2, Res).                                                                       &
+	—                                                                                              &
+	Резольвента непустая. \newline
+	Прямой ход. \newline
+	Запуск алгоритма унификации для верхней подцели с 1-ым заголовком из БЗ (find\_grandparent).     \\
+	\hline
+
+	1                                                                                              &
+	max3\_cut(0, 5, 2, Res).                                                                       &
+	max3\_cut(0, 5, 2, Res) = \newline
+	find\_grandparent(...) \newline
+	Унификация неуспешна (разные функторы).                                                        &
+	Унификация неуспешна. \newline
+	Резольвента непустая. \newline
+	Прямой ход.                                                                                      \\
+	\hline
+
+	2-23                                                                                           &
+	...                                                                                            &
+	... (Пропуск несовпадающих предикатов gender, parent, max2\_no\_cut, max2\_cut, max3\_no\_cut) &
+	...                                                                                              \\
+	\hline
+
+	24                                                                                             &
+	max3\_cut(0, 5, 2, Res). \newline
+	Успешная унификация. \newline
+	Редукция и применение подстановки к полученной конъюнкции целей: \newline
+	>=(0, 5), \newline
+	>=(0, 2), \newline
+	!.                                                                                             &
+	max3\_cut(0, 5, 2, Res) = \newline
+	max3\_cut(X, Y, Z, X) \newline
+	Унификация успешна. \newline
+	Подстановка: \newline
+	\{X = 0, Y = 5, Z = 2, Res = X\}                                                               &
+	Унификация успешна. \newline
+	Резольвента непустая. \newline
+	Прямой ход. \newline
+	Запуск алгоритма унификации для >=(0, 5) и Истина.                                               \\
+	\hline
+
+	25                                                                                             &
+	>=(0, 5), \newline
+	>=(0, 2), \newline
+	!. \newline
+	Восстановленное состояние резольвенты: \newline
+	max3\_cut(0, 5, 2, Res).                                                                       &
+	>=(0, 5) = \newline
+	Ложь \newline
+	Унификация неуспешна (Ложь).                                                                   &
+	Унификация неуспешна. \newline
+	Откат. Восстанавливается предыдущее состояние резольвенты (Шаг 0). \newline
+	Резольвента непустая. \newline
+	Прямой ход.                                                                                      \\
+	\hline
+
+	26                                                                                             &
+	max3\_cut(0, 5, 2, Res). \newline
+	Успешная унификация. \newline
+	Редукция и применение подстановки к полученной конъюнкции целей: \newline
+	>=(5, 2), \newline
+	!.                                                                                             &
+	max3\_cut(0, 5, 2, Res) = \newline
+	max3\_cut(\_, Y, Z, Y) \newline
+	Унификация успешна. \newline
+	Подстановка: \newline
+	\{Y = 5, Z = 2, Res = Y\}                                                                      &
+	Унификация успешна. \newline
+	Резольвента непустая. \newline
+	Прямой ход. \newline
+	Запуск алгоритма унификации для >=(5, 2) и Истина.                                               \\
+	\hline
+
+	27                                                                                             &
+	>=(5, 2), \newline
+	!. \newline
+	Успешная унификация. \newline
+	Редукция и применение подстановки к полученной конъюнкции целей: \newline
+	!.                                                                                             &
+	>=(5, 2) = \newline
+	Истина \newline
+	Унификация успешна. \newline
+	Подстановка: \newline
+	Нет.                                                                                           &
+	Унификация успешна. \newline
+	Резольвента непустая. \newline
+	Прямой ход. \newline
+	Запуск алгоритма обработки предиката отсечения (!).                                              \\
+	\hline
+
+	28                                                                                             &
+	!. \newline
+	Успешная унификация. \newline
+	Редукция и применение подстановки к полученной конъюнкции целей: \newline
+	Нет.                                                                                           &
+	! = \newline
+	! \newline
+	Унификация успешна. \newline
+	Подстановка: \newline
+	Нет.                                                                                           &
+	Унификация успешна. \newline
+	Предикат отсечения срабатывает: удаляются все точки возврата для текущей цели. \newline
+	Резольвента пуста. \newline
+	Знания подобраны. Подстановка \{Res = 5\}. \newline
+	Завершение работы (альтернативные ветви отсечены).                                               \\
+	\hline
+\end{tabularx}

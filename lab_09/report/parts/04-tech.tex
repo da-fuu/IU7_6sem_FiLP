@@ -1,0 +1,122 @@
+\section{Реализация программы}
+
+Реализация программы представлена в листинге \ref{lst:prog}.
+
+\begin{lstlisting}[caption={Реализация программы <<Предки>>}, label={lst:prog}]
+find_grandparent(GP, GPGender, PGender, Child) :-
+  parent(GP, Parent),
+  gender(GP, GPGender),
+  parent(Parent, Child),
+  gender(Parent, PGender).
+
+gender(male, petr).
+gender(male, fedor).
+gender(male, alexey).
+gender(male, ivan).
+
+gender(female, anna).
+gender(female, olga).
+gender(female, maria).
+
+parent(petr, maria).
+parent(anna, maria).
+parent(fedor, alexey).
+parent(olga, alexey).
+parent(maria, ivan).
+parent(alexey, ivan).
+
+max2_no_cut(X, Y, X) :- X >= Y.
+max2_no_cut(X, Y, Y) :- X < Y.
+max2_cut(X, Y, X) :- X >= Y, !.
+max2_cut(_, Y, Y).
+
+max3_no_cut(X, Y, Z, X) :- X >= Y, X >= Z.
+max3_no_cut(X, Y, Z, Y) :- Y > X, Y >= Z.
+max3_no_cut(X, Y, Z, Z) :- Z > X, Z > Y.
+max3_cut(X, Y, Z, X) :- X >= Y, X >= Z, !.
+max3_cut(_, Y, Z, Y) :- Y >= Z, !.
+max3_cut(_, _, Z, Z).
+\end{lstlisting}
+
+Форма вопроса вида \ref{lst:query1} по имени субъекта определить всех его бабушек.
+\begin{lstlisting}[caption={Форма задания вопроса 1}, label={lst:query1}]
+?- find_grandparent(GP, female, _, name).
+\end{lstlisting}
+
+Форма вопроса вида \ref{lst:query2} по имени субъекта определить всех его дедушек.
+\begin{lstlisting}[caption={Форма задания вопроса 2}, label={lst:query2}]
+?- find_grandparent(GP, male, _, name).
+\end{lstlisting}
+
+Форма вопроса вида \ref{lst:query3} по имени субъекта определить всех его бабушек и дедушек.
+\begin{lstlisting}[caption={Форма задания вопроса 3}, label={lst:query3}]
+?- find_grandparent(GP, _, _, name).
+\end{lstlisting}
+
+Форма вопроса вида \ref{lst:query4} по имени субъекта определить его бабушку по материнской линии.
+\begin{lstlisting}[caption={Форма задания вопроса 4}, label={lst:query4}]
+?- find_grandparent(GP, female, female, name).
+\end{lstlisting}
+
+Форма вопроса вида \ref{lst:query5} по имени субъекта определить его бабушку и дедушку по материнской линии.
+\begin{lstlisting}[caption={Форма задания вопроса 5}, label={lst:query5}]
+?- find_grandparent(GP, _, female, name).
+\end{lstlisting}
+
+\section{Варианты вопросов и ответов на них}
+
+\begin{lstlisting}[caption={Вопрос и ответ №1}, label={lst:q1}]
+?- find_grandparent(GP, female, _, ivan).
+GP = anna ;
+GP = olga .
+\end{lstlisting}
+
+\begin{lstlisting}[caption={Вопрос и ответ №2}, label={lst:q2}]
+?- find_grandparent(GP, male, _, ivan).
+GP = petr ;
+GP = fedor .
+\end{lstlisting}
+
+\begin{lstlisting}[caption={Вопрос и ответ №3}, label={lst:q3}]
+?- find_grandparent(GP, _, _, ivan).
+GP = petr ;
+GP = anna ;
+GP = fedor ;
+GP = olga .
+\end{lstlisting}
+
+\begin{lstlisting}[caption={Вопрос и ответ №4}, label={lst:q4}]
+?- find_grandparent(GP, female, female, ivan).
+GP = anna .
+\end{lstlisting}
+
+\begin{lstlisting}[caption={Вопрос и ответ №5}, label={lst:q5}]
+?- find_grandparent(GP, _, female, ivan).
+GP = petr ;
+GP = anna .
+\end{lstlisting}
+
+\begin{lstlisting}[caption={Вопрос и ответ №6}, label={lst:q6}]
+?- max2_no_cut(1, 2, Res).
+Res = 2.
+\end{lstlisting}
+
+\begin{lstlisting}[caption={Вопрос и ответ №7}, label={lst:q7}]
+?- max2_cut(3, 1, Res).
+Res = 3.
+\end{lstlisting}
+
+\begin{lstlisting}[caption={Вопрос и ответ №8}, label={lst:q8}]
+?- max3_no_cut(3, 1, 2, Res).
+Res = 3.
+\end{lstlisting}
+
+\begin{lstlisting}[caption={Вопрос и ответ №9}, label={lst:q9}]
+?- max3_cut(0, 1, 2, Res).
+Res = 2.
+\end{lstlisting}
+
+\begin{lstlisting}[caption={Вопрос и ответ №10}, label={lst:q10}]
+?- max3_cut(0, 5, 2, Res).
+Res = 5.
+\end{lstlisting}
