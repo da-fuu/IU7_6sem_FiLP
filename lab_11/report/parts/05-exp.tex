@@ -1,0 +1,213 @@
+\clearpage
+
+\section{Порядок работы системы}
+
+Вопрос: \texttt{?- list\_sum([1, 2, 3], Res).}
+
+\begin{tabularx}{\textwidth}{|c|>{\small}X|>{\small}X|>{\small}X|}
+	\hline
+	\textbf{№}                                                                         &
+	\textbf{Состояние резольвенты}                                                     &
+	\textbf{Для каких термов запускается алгоритм унификации, результат и подстановка} &
+	\textbf{Дальнейшие действия}                                                         \\
+	\hline
+
+	0                                                                                  &
+	list\_sum([1, 2, 3], Res).                                                         &
+	—                                                                                  &
+	Резольвента непустая. \newline
+	Прямой ход. \newline
+	Запуск алгоритма унификации для верхней подцели с 1-ым заголовком из БЗ.             \\
+	\hline
+
+	1                                                                                  &
+	list\_sum([1, 2, 3], Res). \newline
+	Успешная унификация. \newline
+	Редукция подцели: \newline
+	rec\_sum(List, 0, Res). \newline
+	Применение подстановки к полученной конъюнкции целей: \newline
+	rec\_sum([1, 2, 3], 0, Res).                                                       &
+	list\_sum([1, 2, 3], Res) = \newline
+	list\_sum(List, Res\_arg) \newline
+	Унификация успешна. \newline
+	Подстановка: \newline
+	\{List = [1, 2, 3], Res\_arg = Res\}                                               &
+	Унификация успешна. \newline
+	Выполнение редукции подцели и применение подстановки к новому состоянию резольвенты. \newline
+	Резольвента непустая. \newline
+	Прямой ход. \newline
+	Запуск алгоритма унификации для rec\_sum([1, 2, 3], 0, Res) и 1-ого заголовка БЗ.    \\
+	\hline
+
+	2                                                                                  &
+	rec\_sum([1, 2, 3], 0, Res).                                                       &
+	rec\_sum([1, 2, 3], 0, Res) = rec\_sum([], Sum, Sum) \newline
+	Унификация неуспешна (разные аргументы).                                           &
+	Унификация неуспешна. \newline
+	Резольвента непустая. \newline
+	Прямой ход. Переход к следующему правилу.                                            \\
+	\hline
+
+	3                                                                                  &
+	rec\_sum([1, 2, 3], 0, Res). \newline
+	Успешная унификация. \newline
+	Редукция подцели: \newline
+	NewSum is Sum + X, \newline
+	rec\_sum(Rest, NewSum, Res). \newline
+	Применение подстановки: \newline
+	NewSum is 0 + 1, \newline
+	rec\_sum([2, 3], NewSum, Res).                                                     &
+	rec\_sum([1, 2, 3], 0, Res) = \newline
+	rec\_sum([X|Rest], Sum, Res\_arg) \newline
+	Унификация успешна. \newline
+	Подстановка: \newline
+	\{X = 1, Rest = [2, 3], Sum = 0, Res\_arg = Res\}                                  &
+	Унификация успешна. \newline
+	Выполнение редукции подцели и применение подстановки. \newline
+	Резольвента непустая. \newline
+	Прямой ход. \newline
+	Запуск алгоритма вычисления для is(0 + 1).                                           \\
+	\hline
+
+	4                                                                                  &
+	NewSum is 0 + 1, \newline
+	rec\_sum([2, 3], NewSum, Res). \newline
+	Успешная унификация. \newline
+	Вычисление предиката is. \newline
+	Применение подстановки: \newline
+	rec\_sum([2, 3], 1, Res).                                                          &
+	NewSum is 0 + 1 = \newline
+	Истина \newline
+	Унификация успешна. \newline
+	Подстановка: \newline
+	\{NewSum = 1\}                                                                     &
+	Унификация успешна. \newline
+	Резольвента непустая. \newline
+	Прямой ход. \newline
+	Запуск алгоритма унификации для rec\_sum([2, 3], 1, Res) и 1-ого заголовка БЗ.       \\
+	\hline
+
+	5                                                                                  &
+	rec\_sum([2, 3], 1, Res).                                                          &
+	rec\_sum([2, 3], 1, Res) = \newline
+	rec\_sum([], Sum, Sum) \newline
+	Унификация неуспешна.                                                              &
+	Унификация неуспешна. \newline
+	Резольвента непустая. \newline
+	Прямой ход. Переход к следующему правилу.                                            \\
+	\hline
+
+	6                                                                                  &
+	rec\_sum([2, 3], 1, Res). \newline
+	Успешная унификация. \newline
+	Редукция и применение подстановки: \newline
+	NewSum is 1 + 2, \newline
+	rec\_sum([3], NewSum, Res).                                                        &
+	rec\_sum([2, 3], 1, Res) = \newline
+	rec\_sum([X|Rest], Sum, Res\_arg) \newline
+	Унификация успешна. \newline
+	Подстановка: \newline
+	\{X = 2, Rest = [3], Sum = 1, Res\_arg = Res\}                                     &
+	Унификация успешна. \newline
+	Резольвента непустая. \newline
+	Прямой ход. \newline
+	Запуск алгоритма вычисления для is(1 + 2).                                           \\
+	\hline
+
+	7                                                                                  &
+	NewSum is 1 + 2, \newline
+	rec\_sum([3], NewSum, Res). \newline
+	Успешная унификация. \newline
+	Применение подстановки: \newline
+	rec\_sum([3], 3, Res).                                                             &
+	NewSum is 1 + 2 = \newline
+	Истина \newline
+	Унификация успешна. \newline
+	Подстановка: \newline
+	\{NewSum = 3\}                                                                     &
+	Унификация успешна. \newline
+	Резольвента непустая. \newline
+	Прямой ход. \newline
+	Запуск алгоритма унификации для rec\_sum([3], 3, Res).                               \\
+	\hline
+
+	8                                                                                  &
+	rec\_sum([3], 3, Res).                                                             &
+	rec\_sum([3], 3, Res) = \newline
+	rec\_sum([], Sum, Sum) \newline
+	Унификация неуспешна.                                                              &
+	Унификация неуспешна. \newline
+	Резольвента непустая. \newline
+	Прямой ход. Переход к следующему правилу.                                            \\
+	\hline
+
+	9                                                                                  &
+	rec\_sum([3], 3, Res). \newline
+	Успешная унификация. \newline
+	Редукция и применение подстановки: \newline
+	NewSum is 3 + 3, \newline
+	rec\_sum([], NewSum, Res).                                                         &
+	rec\_sum([3], 3, Res) = \newline
+	rec\_sum([X|Rest], Sum, Res\_arg) \newline
+	Унификация успешна. \newline
+	Подстановка: \newline
+	\{X = 3, Rest = [], Sum = 3, Res\_arg = Res\}                                      &
+	Унификация успешна. \newline
+	Резольвента непустая. \newline
+	Прямой ход. \newline
+	Запуск алгоритма вычисления для is(3 + 3).                                           \\
+	\hline
+
+	10                                                                                 &
+	NewSum is 3 + 3, \newline
+	rec\_sum([], NewSum, Res). \newline
+	Успешная унификация. \newline
+	Применение подстановки: \newline
+	rec\_sum([], 6, Res).                                                              &
+	NewSum is 3 + 3 = \newline
+	Истина \newline
+	Унификация успешна. \newline
+	Подстановка: \newline
+	\{NewSum = 6\}                                                                     &
+	Унификация успешна. \newline
+	Резольвента непустая. \newline
+	Прямой ход. \newline
+	Запуск алгоритма унификации для rec\_sum([], 6, Res).                                \\
+	\hline
+
+	11                                                                                 &
+	rec\_sum([], 6, Res). \newline
+	Успешная унификация. \newline
+	Редукция подцели: \newline
+	!. \newline
+	Применение подстановки: \newline
+	!.                                                                                 &
+	rec\_sum([], 6, Res) = \newline
+	rec\_sum([], Sum, Sum) \newline
+	Унификация успешна. \newline
+	Подстановка: \newline
+	\{Sum = 6, Res = 6\}                                                               &
+	Унификация успешна. \newline
+	Выполнение редукции базового случая. \newline
+	Резольвента непустая. \newline
+	Прямой ход. \newline
+	Запуск алгоритма обработки предиката отсечения (!).                                  \\
+	\hline
+
+	12                                                                                 &
+	!. \newline
+	Успешная унификация. \newline
+	Применение подстановки: \newline
+	Нет.                                                                               &
+	! = \newline
+	! \newline
+	Унификация успешна. \newline
+	Подстановка: \newline
+	Нет.                                                                               &
+	Унификация успешна. \newline
+	Встречен предикат отсечения: удаляются все точки возврата для текущей цели. \newline
+	Резольвента пуста. \newline
+	Знания подобраны. Подстановка \{Res = 6\}. \newline
+	Завершение работы.                                                                   \\
+	\hline
+\end{tabularx}
