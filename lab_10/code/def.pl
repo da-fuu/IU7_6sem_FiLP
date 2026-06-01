@@ -1,7 +1,13 @@
 :- use_module(library(clpfd)).
-power_fraction(Nu, X, Depth, frac(1, 1 - Frac)) :-
+
+solve_all(Nu, X, Depth, Frac, P, Q) :-
+    NewX = X - 1,
     Depth #> 0,
-    build_frac(Nu, X, 1, Depth, Frac).
+    Frac = frac(1, 1 - InnerFrac),
+    build_frac(Nu, NewX, 1, Depth, InnerFrac),
+    transform(InnerFrac, P_inner, Q_inner),
+    P = Q_inner,
+    Q = Q_inner - P_inner.
 
 build_frac(_, _, K, Depth, 0) :-
     K #> Depth.
@@ -25,19 +31,8 @@ calc_term(Nu, X, K, (N - Nu) * X, B) :-
     N #= K // 2,
     B #= 2 * N + 1.
 
-eval_frac(0, 0).
-eval_frac(frac(A_expr, B_expr + NextFrac), Result) :-
-    eval_frac(NextFrac, NextVal),
-    A is A_expr,
-    B is B_expr,
-    Result is A / (B + NextVal).
-
-eval_frac(frac(A_expr, B_expr - NextFrac), Result) :-
-    eval_frac(NextFrac, NextVal),
-    A is A_expr,
-    B is B_expr,
-    Result is A / (B - NextVal).
-
-calculate_power(Nu, X, Depth, Symbolic, Numeric) :-
-    power_fraction(Nu, X, Depth, Symbolic),
-    eval_frac(Symbolic, Numeric).
+transform(0, 0, 1).
+transform(frac(A, B + Next), P_new, Q_new) :-
+    transform(Next, P_sub, Q_sub),
+    P_new = A * Q_sub,
+    Q_new = B * Q_sub + P_sub.
