@@ -1,0 +1,37 @@
+MATCH (n) DETACH DELETE n;
+
+CREATE
+  (petr:Person {name: 'petr', gender: 'male'}),
+  (fedor:Person {name: 'fedor', gender: 'male'}),
+  (alexey:Person {name: 'alexey', gender: 'male'}),
+  (ivan:Person {name: 'ivan', gender: 'male'}),
+  (anna:Person {name: 'anna', gender: 'female'}),
+  (olga:Person {name: 'olga', gender: 'female'}),
+  (maria:Person {name: 'maria', gender: 'female'}),
+  (elena:Person {name: 'elena', gender: 'female'}),
+
+  (petr)-[:PARENT_OF]->(maria),
+  (anna)-[:PARENT_OF]->(maria),
+  (fedor)-[:PARENT_OF]->(alexey),
+  (olga)-[:PARENT_OF]->(alexey),
+  (maria)-[:PARENT_OF]->(ivan),
+  (alexey)-[:PARENT_OF]->(ivan),
+  (fedor)-[:PARENT_OF]->(elena),
+  (olga)-[:PARENT_OF]->(elena);
+
+
+MATCH (husband:Person {name: 'alexey', gender: 'male'})-[:PARENT_OF]->(child:Person)<-[:PARENT_OF]-(wife:Person {gender: 'female'})
+MATCH (tescha:Person {gender: 'female'})-[:PARENT_OF]->(wife)
+RETURN DISTINCT tescha.name AS Tescha
+
+MATCH (parent:Person {name: 'anna'})-[:PARENT_OF]->(daughter:Person {gender: 'female'})
+MATCH (daughter)-[:PARENT_OF]->(child:Person)<-[:PARENT_OF]-(zyat:Person {gender: 'male'})
+RETURN DISTINCT zyat.name AS Zyat
+
+MATCH (parent:Person {name: 'petr'})-[:PARENT_OF]->(daughter:Person {gender: 'female'})
+MATCH (daughter)-[:PARENT_OF]->(child:Person)<-[:PARENT_OF]-(zyat:Person {gender: 'male'})
+RETURN DISTINCT zyat.name AS Zyat
+
+MATCH (husband:Person {name: 'alexey', gender: 'male'})-[:PARENT_OF]->(child:Person)<-[:PARENT_OF]-(wife:Person {gender: 'female'})
+MATCH (tescha:Person {gender: 'female'})-[:PARENT_OF]->(wife)
+RETURN DISTINCT tescha.name AS Tescha
