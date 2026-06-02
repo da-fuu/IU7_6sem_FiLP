@@ -77,25 +77,32 @@ mult_poly(C1 + x * P1, P2, R) :-
 mult_x(N, 0.0 + x * N) :- is_scalar(N), !.
 mult_x(C + x * P, 0.0 + x * (C + x * P)).
 
-to_standard(Horner, Std) :- to_std_rec(Horner, 0, Std).
+to_standard(Horner, Std) :-
+    to_std_acc(Horner, 0, empty, Result),
+    (Result = empty -> Std = 0.0 ; Std = Result).
 
-to_std_rec(0.0, _, 0.0) :- !.
-to_std_rec(0, _, 0.0) :- !.
-to_std_rec(N, 0, N) :- is_scalar(N), !.
-to_std_rec(N, 1, N*x) :- is_scalar(N), !.
-to_std_rec(N, D, N*x^D) :- is_scalar(N), !.
+to_std_acc(0.0, _, Acc, Acc) :- !.
+to_std_acc(0, _, Acc, Acc) :- !.
+to_std_acc(N, D, Acc, FinalAcc) :- is_scalar(N), !,
+    make_term(N, D, Term),
+    add_term(Acc, Term, FinalAcc).
 
-to_std_rec(0.0 + x * P, D, Rest) :- !, D1 is D + 1, to_std_rec(P, D1, Rest).
-to_std_rec(0 + x * P, D, Rest) :- !, D1 is D + 1, to_std_rec(P, D1, Rest).
-
-to_std_rec(C + x * P, D, Res) :-
+to_std_acc(0.0 + x * P, D, Acc, Res) :- !,
     D1 is D + 1,
-    to_std_rec(P, D1, PRest),
-    format_term(C, D, PRest, Res).
+    to_std_acc(P, D1, Acc, Res).
+to_std_acc(0 + x * P, D, Acc, Res) :- !,
+    D1 is D + 1,
+    to_std_acc(P, D1, Acc, Res).
 
-format_term(C, 0, 0.0, C) :- !.
-format_term(C, 1, 0.0, C*x) :- !.
-format_term(C, D, 0.0, C*x^D) :- !.
-format_term(C, 0, Rest, C + Rest) :- !.
-format_term(C, 1, Rest, C*x + Rest) :- !.
-format_term(C, D, Rest, C*x^D + Rest).
+to_std_acc(C + x * P, D, Acc, Res) :-
+    make_term(C, D, Term),
+    add_term(Acc, Term, NewAcc),
+    D1 is D + 1,
+    to_std_acc(P, D1, NewAcc, Res).
+
+make_term(C, 0, C) :- !.
+make_term(C, 1, C*x) :- !.
+make_term(C, D, C*x^D).
+
+add_term(empty, Term, Term) :- !.
+add_term(Acc, Term, Acc + Term).
