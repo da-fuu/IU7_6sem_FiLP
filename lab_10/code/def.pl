@@ -38,7 +38,7 @@ transform(frac(A, B + Next), P_new, Q_new) :-
     Q_new = B * Q_sub + P_sub.
 
 
-solve_optimized(Nu, X, Depth, Frac, P_opt, Q_opt) :-
+solve_optimized(Nu, X, Depth, Frac, P_raw, Q_raw, P_horner, Q_horner, P_opt, Q_opt) :-
     solve_all(Nu, X, Depth, Frac, P_raw, Q_raw),
     eval_ast(P_raw, P_horner),
     eval_ast(Q_raw, Q_horner),
